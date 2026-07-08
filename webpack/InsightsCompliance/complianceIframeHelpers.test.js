@@ -1,5 +1,6 @@
 import {
   getComplianceAppRoute,
+  getComplianceForemanPath,
   getComplianceIframeSrc,
 } from './complianceIframeHelpers';
 
@@ -24,6 +25,17 @@ describe('complianceIframeHelpers', () => {
     it('defaults to reports for unknown paths', () => {
       expect(getComplianceAppRoute('/foreman_rh_cloud/insights_cloud')).toBe(
         'reports'
+      );
+    });
+  });
+
+  describe('getComplianceForemanPath', () => {
+    it('maps app routes to foreman compliance paths', () => {
+      expect(getComplianceForemanPath('reports')).toBe(
+        '/foreman_rh_cloud/insights_compliance/reports'
+      );
+      expect(getComplianceForemanPath('scappolicies/new')).toBe(
+        '/foreman_rh_cloud/insights_compliance/scappolicies/new'
       );
     });
   });

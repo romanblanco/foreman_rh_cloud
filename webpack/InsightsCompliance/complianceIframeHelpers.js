@@ -4,6 +4,20 @@ import {
 } from './complianceIframeConstants';
 
 /**
+ * Foreman browser path for a compliance app sub-route.
+ *
+ * @param {string} appRoute
+ * @returns {string}
+ */
+export const getComplianceForemanPath = (appRoute = 'reports') => {
+  const subRoute = String(appRoute).replace(/^\/+/, '');
+
+  return subRoute
+    ? `${COMPLIANCE_ROUTE_PREFIX}/${subRoute}`
+    : `${COMPLIANCE_ROUTE_PREFIX}/reports`;
+};
+
+/**
  * Path inside the compliance SPA (e.g. `reports`, `scappolicies/new`).
  *
  * @param {string} pathname Foreman location pathname
