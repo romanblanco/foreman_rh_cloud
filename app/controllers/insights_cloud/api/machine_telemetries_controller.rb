@@ -116,7 +116,11 @@ module InsightsCloud::Api
     end
 
     def ensure_branch_id
-      @branch_id = cp_owner_id(@organization)
+      if ForemanRhCloud.with_iop_smart_proxy?
+        @branch_id = @organization.label
+      else
+        @branch_id = cp_owner_id(@organization)
+      end
       return render_message "Branch ID not found for organization #{@organization.title}", :status => 400 unless @branch_id
     end
 
