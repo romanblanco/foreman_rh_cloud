@@ -286,6 +286,17 @@ module InsightsCloud::Api
         assert_equal "Branch ID not found for organization #{@host.organization.title}", res['message']
         assert_response 400
       end
+
+      test 'should use organization label as branch_id in IoP mode' do
+        ForemanRhCloud.stubs(:with_iop_smart_proxy?).returns(true)
+        @controller.unstub(:cp_owner_id)
+
+        get :branch_info
+
+        res = JSON.parse(@response.body)
+        assert_equal @host.organization.label, res['remote_branch']
+        assert_response :success
+      end
     end
   end
 end
