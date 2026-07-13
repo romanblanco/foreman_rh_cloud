@@ -177,6 +177,38 @@ module ForemanRhCloud
           'GET' => :view_compliance,
         },
       },
+      # Test results for a report - requires view_compliance for GET
+      {
+        test: %r{api/compliance/v2/reports/[^/]+/test_results$},
+        tag_name: :tags,
+        permissions: {
+          'GET' => :view_compliance,
+        },
+      },
+      # Individual test result in a report - requires view_compliance for GET
+      {
+        test: %r{api/compliance/v2/reports/[^/]+/test_results/[^/]+$},
+        tag_name: :tags,
+        permissions: {
+          'GET' => :view_compliance,
+        },
+      },
+      # OS versions for test results in a report - requires view_compliance for GET
+      {
+        test: %r{api/compliance/v2/reports/[^/]+/test_results/os_versions$},
+        tag_name: :tags,
+        permissions: {
+          'GET' => :view_compliance,
+        },
+      },
+      # Security guide versions for test results in a report - requires view_compliance for GET
+      {
+        test: %r{api/compliance/v2/reports/[^/]+/test_results/security_guide_versions$},
+        tag_name: :tags,
+        permissions: {
+          'GET' => :view_compliance,
+        },
+      },
       # Other compliance endpoints - GET requires view_compliance
       {
         test: %r{api/compliance/v2/.*},
