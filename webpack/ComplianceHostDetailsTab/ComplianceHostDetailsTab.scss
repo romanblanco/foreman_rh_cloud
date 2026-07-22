@@ -1,0 +1,13 @@
+div.rh-cloud-insights-compliance-host-details-component {
+  display: flex;
+  flex-direction: column;
+  min-height: 70vh;
+  padding: 0;
+}
+
+.rh-cloud-insights-compliance-host-details-iframe {
+  border: 0;
+  flex: 1 1 auto;
+  min-height: 70vh;
+  width: 100%;
+}

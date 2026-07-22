@@ -8,11 +8,13 @@ import { mockUser } from '../common/ScalprumModule/ScalprumContext';
  * @param {HTMLIFrameElement} iframe
  * @param {Object} options
  * @param {Array} options.permissions Insights-format permissions from useInsightsPermissions
- * @param {string} options.pathname Foreman pathname for initial in-app routing
+ * @param {string} [options.pathname] Foreman pathname (used when appRoute is omitted)
+ * @param {string} [options.appRoute] Explicit in-app route (e.g. systems/<uuid>); overrides pathname
+ * @param {string} [options.embedded] Embedding mode for the iframe (e.g. 'host-tab')
  */
 export const postComplianceChromeToIframe = (
   iframe,
-  { permissions = [], pathname = '' } = {}
+  { permissions = [], pathname = '', appRoute, embedded } = {}
 ) => {
   if (!iframe?.contentWindow || typeof window === 'undefined') {
     return;
@@ -24,8 +26,12 @@ export const postComplianceChromeToIframe = (
       payload: {
         user: mockUser,
         permissions,
-        appRoute: getComplianceAppRoute(pathname),
+        appRoute:
+          appRoute !== undefined
+            ? appRoute
+            : getComplianceAppRoute(pathname),
         pathname,
+        ...(embedded ? { embedded } : {}),
       },
     },
     window.location.origin
