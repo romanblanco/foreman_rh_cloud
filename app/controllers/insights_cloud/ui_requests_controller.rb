@@ -1,6 +1,7 @@
 module InsightsCloud
   class UIRequestsController < ::ApplicationController
     layout false
+    skip_before_action :verify_authenticity_token
 
     before_action :ensure_org, :find_location, :only => [:forward_request]
 
@@ -89,7 +90,7 @@ module InsightsCloud
     private
 
     def ensure_org
-      @organization = Organization.current
+      @organization = Organization.current || User.current&.default_organization || User.current&.my_organizations&.first
       return render_message 'Organization not found or invalid', :status => 400 unless @organization
     end
 
