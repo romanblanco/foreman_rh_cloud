@@ -32,6 +32,58 @@ module InsightsCloud
       end
     end
 
+    context '#ensure_org' do
+      setup do
+        @org = FactoryBot.create(:organization)
+        @user = FactoryBot.build(:user)
+        User.stubs(:current).returns(@user)
+        Organization.stubs(:current).returns(nil)
+        ForemanRhCloud.stubs(:with_iop_smart_proxy?).returns(true)
+      end
+
+      test "should preserve the selected organization" do
+        Organization.stubs(:current).returns(@org)
+        @user.expects(:default_organization).never
+
+        @controller.send(:ensure_org)
+
+        assert_equal @org, @controller.instance_variable_get(:@organization)
+      end
+
+      test "should use the user's default organization in IoP" do
+        @user.stubs(:default_organization).returns(@org)
+
+        @controller.send(:ensure_org)
+
+        assert_equal @org, @controller.instance_variable_get(:@organization)
+      end
+
+      test "should fall back to an accessible organization in IoP" do
+        @user.stubs(:default_organization).returns(nil)
+        @user.stubs(:my_organizations).returns([@org])
+
+        @controller.send(:ensure_org)
+
+        assert_equal @org, @controller.instance_variable_get(:@organization)
+      end
+
+      test "should not default the organization in hosted mode" do
+        ForemanRhCloud.stubs(:with_iop_smart_proxy?).returns(false)
+        @user.expects(:default_organization).never
+        @controller.expects(:render_message).with('Organization not found or invalid', :status => 400)
+
+        @controller.send(:ensure_org)
+      end
+
+      test "should reject an IoP user without an organization" do
+        @user.stubs(:default_organization).returns(nil)
+        @user.stubs(:my_organizations).returns([])
+        @controller.expects(:render_message).with('Organization not found or invalid', :status => 400)
+
+        @controller.send(:ensure_org)
+      end
+    end
+
     context '#forward_request' do
       include MockCerts
 

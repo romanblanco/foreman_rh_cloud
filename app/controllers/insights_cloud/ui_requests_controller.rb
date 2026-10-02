@@ -90,6 +90,9 @@ module InsightsCloud
 
     def ensure_org
       @organization = Organization.current
+      if @organization.nil? && ForemanRhCloud.with_iop_smart_proxy?
+        @organization = User.current&.default_organization || User.current&.my_organizations&.first
+      end
       return render_message 'Organization not found or invalid', :status => 400 unless @organization
     end
 
