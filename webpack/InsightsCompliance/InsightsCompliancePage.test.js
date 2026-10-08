@@ -27,9 +27,12 @@ describe('InsightsCompliancePage', () => {
     expect(
       document.querySelector('.rh-cloud-insights-compliance-page')
     ).toBeTruthy();
-    expect(screen.getByTestId('compliance-iframe')).toHaveAttribute(
-      'src',
+    const src = new URL(
+      screen.getByTestId('compliance-iframe').getAttribute('src')
+    );
+    expect(`${src.origin}${src.pathname}`).toBe(
       `${window.location.origin}/assets/apps/compliance/index.html`
     );
+    expect(src.searchParams.get('frc_reload')).toMatch(/^\d+$/);
   });
 });

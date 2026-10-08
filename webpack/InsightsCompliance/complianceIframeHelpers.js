@@ -13,11 +13,17 @@ const COMPLIANCE_IOP_PATH = {
   fallbackRoute: 'reports',
 };
 
+// Reuse one URL during this parent-page lifetime, but bypass previously cached
+// entry HTML when Foreman is loaded again after a frontend deployment.
+const COMPLIANCE_ENTRY_VERSION = Date.now().toString();
+
 export const getComplianceForemanPath = (appRoute = 'reports') =>
   getIopForemanPath(appRoute, COMPLIANCE_IOP_PATH);
 
 export const getComplianceAppRoute = (pathname = '') =>
   getIopAppRoute(pathname, COMPLIANCE_IOP_PATH);
 
-export const getComplianceIframeSrc = () =>
-  getIopIframeSrc(COMPLIANCE_STATIC_APP_PATH);
+export const getComplianceIframeSrc = () => {
+  const src = getIopIframeSrc(COMPLIANCE_STATIC_APP_PATH);
+  return `${src}?frc_reload=${COMPLIANCE_ENTRY_VERSION}`;
+};

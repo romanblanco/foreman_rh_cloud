@@ -41,10 +41,16 @@ describe('complianceIframeHelpers', () => {
   });
 
   describe('getComplianceIframeSrc', () => {
-    it('returns the static compliance app entry', () => {
-      expect(getComplianceIframeSrc()).toBe(
+    it('returns the compliance entry with a cache-busting parent-page version', () => {
+      const src = new URL(getComplianceIframeSrc());
+      expect(`${src.origin}${src.pathname}`).toBe(
         `${window.location.origin}/assets/apps/compliance/index.html`
       );
+      expect(src.searchParams.get('frc_reload')).toMatch(/^\d+$/);
+    });
+
+    it('does not reload the iframe on ordinary parent rerenders', () => {
+      expect(getComplianceIframeSrc()).toBe(getComplianceIframeSrc());
     });
   });
 });
